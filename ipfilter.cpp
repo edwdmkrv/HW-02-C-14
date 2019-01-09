@@ -12,7 +12,9 @@ int main() try {
 
 	std::cout.exceptions(std::ostream::badbit | std::ostream::failbit | std::ostream::eofbit);
 
-	for (auto const &filter: std::initializer_list<filter_t>{
+	for (
+		auto const &filter:
+		std::initializer_list<filter_t>{
 			[](ip_t const &) {
 				return true;
 			},
@@ -28,9 +30,9 @@ int main() try {
 				       ip.at(1) == "46" ||
 				       ip.at(2) == "46" ||
 				       ip.at(3) == "46";
-			},
-			}) {
-
+			}
+		}
+	) {
 		issue(std::cout, ip_pool, filter);
 	}
 
