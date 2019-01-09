@@ -18,6 +18,3 @@ unsigned patch() {
 	return PROJECT_VERSION_PATCH;
 }
 
-std::string msg() {
-	return "Yes!";
-}

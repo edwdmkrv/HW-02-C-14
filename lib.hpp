@@ -9,6 +9,4 @@ unsigned major();
 unsigned minor();
 unsigned patch();
 
-std::string msg();
-
 #endif
