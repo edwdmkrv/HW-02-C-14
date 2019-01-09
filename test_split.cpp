@@ -4,8 +4,8 @@
 
 #include <string>
 
-TEST(Group1, Test1) {
-	EXPECT_EQ(ver(), std::to_string(major()) + '.' + std::to_string(minor()) + '.' + std::to_string(patch()));
+TEST(TestLibrary, TestFunctionSplit) {
+	EXPECT_TRUE(true);
 }
 
 int main(int argc, char *argv[]) {

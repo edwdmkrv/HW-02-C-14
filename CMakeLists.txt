@@ -29,10 +29,10 @@ add_library (lib SHARED lib.cpp)
 
 add_executable (ipfilter ipfilter.cpp)
 
-add_executable (test1 test1.cpp)
+add_executable (test_split test_split.cpp)
 add_executable (test2 test2.cpp)
 
-set_target_properties (lib ipfilter test1 test2 PROPERTIES
+set_target_properties (lib ipfilter test_split test2 PROPERTIES
 	CXX_STANDARD 14
 	CXX_EXTENSIONS OFF
 	CXX_STANDARD_REQUIRED ON
@@ -43,7 +43,7 @@ target_include_directories (lib
 	PRIVATE "${CMAKE_BINARY_DIR}"
 )
 
-set_target_properties (ipfilter test1 test2 PROPERTIES
+set_target_properties (ipfilter test_split test2 PROPERTIES
 	BUILD_RPATH "${CMAKE_BINARY_DIR}/${LIB_SUBDIR}/lib"
 )
 
@@ -54,7 +54,7 @@ target_link_libraries (ipfilter
 	PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
 )
 
-target_link_libraries (test1
+target_link_libraries (test_split
 	PRIVATE lib
 	PRIVATE "${GTEST_LIBRARY}"
 	PRIVATE "${GTEST_MAIN_LIBRARY}"
@@ -81,8 +81,8 @@ install (TARGETS ipfilter RUNTIME DESTINATION bin CONFIGURATIONS Release COMPONE
 set (CMAKE_VERBOSE_MAKEFILE OFF)
 
 # CTest stuff
-add_test (NAME Test-1
-	COMMAND test1
+add_test (NAME Test-function-split
+	COMMAND test_split
 	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 )
 
