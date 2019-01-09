@@ -5,7 +5,7 @@
 #include <iostream>
 
 TEST(Group1, Test1) {
-	EXPECT_TRUE(std::cout << "Version: " << ver() << std::endl);
+	EXPECT_TRUE(static_cast<bool>(std::cout << "Version: " << ver() << std::endl));
 }
 
 int main(int argc, char *argv[]) {
