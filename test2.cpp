@@ -1,8 +1,14 @@
 #include "lib.hpp"
 
-#include <cstdlib>
+#include <gtest/gtest.h>
+
 #include <iostream>
 
-int main() {
-	return std::cout << "Version: " << ver() << std::endl ? EXIT_SUCCESS : EXIT_FAILURE;
+TEST(Group1, Test1) {
+	EXPECT_TRUE(std::cout << "Version: " << ver() << std::endl);
+}
+
+int main(int argc, char *argv[]) {
+	testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
 }
