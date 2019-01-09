@@ -29,31 +29,17 @@ ip_t split(std::string const &str, char const d) {
 	return r;
 }
 
-void issue(ip_pool_t const &ip_pool, filter_t const &filter = [](ip_t const &) {return true;}) {
-	for (auto const &ip: ip_pool) {
-		if (filter(ip)) {
-			bool dot{};
-
-			for (auto const &ip_part: ip) {
-				std::cout << (dot ? "." : "") << ip_part;
-				dot = true;
-			}
-
-			std::cout << std::endl;
-		}
-	}
-}
-
-int main() try {
+ip_pool_t parse(std::istream &i) {
 	ip_pool_t ip_pool;
 
-	std::cin.exceptions(std::ostream::badbit);
-
-	for(std::string line; std::getline(std::cin, line);) {
+	for(std::string line; std::getline(i, line);) {
 		ip_pool.push_back(split(split(line, '\t').at(0), '.'));
 	}
 
-        // TODO reverse lexicographically sort
+	return ip_pool;
+}
+
+void sort(ip_pool_t &ip_pool) {
 	std::sort(std::begin(ip_pool), std::end(ip_pool),
 		  [](auto const &l, auto const &r) {
 		  	for (auto l_it{std::cbegin(l)}, l_end{std::cend(l)}, r_it{std::cbegin(r)}, r_end{std::cend(r)};
@@ -74,26 +60,53 @@ int main() try {
 		  	return false;
 		  }
 	);
+}
+
+void issue(std::ostream &o, ip_pool_t const &ip_pool, filter_t const &filter = [](ip_t const &) {return true;}) {
+	for (auto const &ip: ip_pool) {
+		if (filter(ip)) {
+			bool dot{};
+
+			for (auto const &ip_part: ip) {
+				o << (dot ? "." : "") << ip_part;
+				dot = true;
+			}
+
+			o << std::endl;
+		}
+	}
+}
+
+int main() try {
+	std::cin.exceptions(std::ostream::badbit);
+
+	ip_pool_t ip_pool{parse(std::cin)};
+
+	sort(ip_pool);
 
 	std::cout.exceptions(std::ostream::badbit | std::ostream::failbit | std::ostream::eofbit);
 
-	issue(ip_pool);
+	for (auto const &filter: std::initializer_list<filter_t>{
+			[](ip_t const &) {
+				return true;
+			},
+			[](ip_t const &ip) {
+				return ip.at(0) == "1";
+			},
+			[](ip_t const &ip) {
+				return ip.at(0) == "46" &&
+				       ip.at(1) == "70";
+			},
+			[](ip_t const &ip) {
+				return ip.at(0) == "46" ||
+				       ip.at(1) == "46" ||
+				       ip.at(2) == "46" ||
+				       ip.at(3) == "46";
+			},
+			}) {
 
-	issue(ip_pool, [](ip_t const &ip) {
-	      return ip.at(0) == "1";
-	});
-
-	issue(ip_pool, [](ip_t const &ip) {
-	      return ip.at(0) == "46" &&
-	             ip.at(1) == "70";
-	});
-
-	issue(ip_pool, [](ip_t const &ip) {
-	      return ip.at(0) == "46" ||
-	             ip.at(1) == "46" ||
-	             ip.at(2) == "46" ||
-	             ip.at(3) == "46";
-	});
+		issue(std::cout, ip_pool, filter);
+	}
 
 	return EXIT_SUCCESS;
 } catch (std::exception const &e) {
