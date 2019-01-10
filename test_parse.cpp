@@ -4,8 +4,8 @@
 
 #include <iostream>
 
-TEST(Group1, Test1) {
-	EXPECT_TRUE(static_cast<bool>(std::cout << "Version: " << ver() << std::endl));
+TEST(GroupiLibrary, TestFunctionParse) {
+	EXPECT_TRUE(true);
 }
 
 int main(int argc, char *argv[]) {
