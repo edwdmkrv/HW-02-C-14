@@ -31,8 +31,10 @@ add_executable (ipfilter ipfilter.cpp)
 
 add_executable (test_split test_split.cpp)
 add_executable (test_parse test_parse.cpp)
+add_executable (test_sort test_sort.cpp)
+add_executable (test_issue test_issue.cpp)
 
-set_target_properties (lib ipfilter test_split test_parse PROPERTIES
+set_target_properties (lib ipfilter test_split test_parse test_sort test_issue PROPERTIES
 	CXX_STANDARD 14
 	CXX_EXTENSIONS OFF
 	CXX_STANDARD_REQUIRED ON
@@ -43,7 +45,7 @@ target_include_directories (lib
 	PRIVATE "${CMAKE_BINARY_DIR}"
 )
 
-set_target_properties (ipfilter test_split test_parse PROPERTIES
+set_target_properties (ipfilter test_split test_parse test_sort test_issue PROPERTIES
 	BUILD_RPATH "${CMAKE_BINARY_DIR}/${LIB_SUBDIR}/lib"
 )
 
@@ -62,6 +64,20 @@ target_link_libraries (test_split
 )
 
 target_link_libraries (test_parse
+	PRIVATE lib
+	PRIVATE "${GTEST_LIBRARY}"
+	PRIVATE "${GTEST_MAIN_LIBRARY}"
+	PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
+)
+
+target_link_libraries (test_sort
+	PRIVATE lib
+	PRIVATE "${GTEST_LIBRARY}"
+	PRIVATE "${GTEST_MAIN_LIBRARY}"
+	PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
+)
+
+target_link_libraries (test_issue
 	PRIVATE lib
 	PRIVATE "${GTEST_LIBRARY}"
 	PRIVATE "${GTEST_MAIN_LIBRARY}"
@@ -88,6 +104,16 @@ add_test (NAME Test-function-split
 
 add_test (NAME Test-function-parse
 	COMMAND test_parse
+	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+)
+
+add_test (NAME Test-function-sort
+	COMMAND test_sort
+	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+)
+
+add_test (NAME Test-function-issue
+	COMMAND test_issue
 	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 )
 
