@@ -12,7 +12,7 @@ TEST(GroupiLibrary, TestFunctionSort) {
 	enum: unsigned {attempts = 10};
 
 	for (unsigned attempt{0}; attempt < attempts; attempt++) {
-		enum: unsigned {lines = 4 * 1024};
+		enum: unsigned {lines = 64 * 1024};
 
 		std::uniform_int_distribution<uint8_t> dist{std::numeric_limits<uint8_t>::min(), std::numeric_limits<uint8_t>::max()};
 		std::random_device rnd;
