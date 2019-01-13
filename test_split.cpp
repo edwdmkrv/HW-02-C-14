@@ -35,7 +35,6 @@ TEST(TestLibrary, TestFunctionSplit) {
 		}
 	
 		std::vector<std::string> const splitted{split(str, d)};
-		std::cout << "size: " << splitted.size() << std::endl;
 	
 		EXPECT_EQ(splitted, ethalon);
 	}
