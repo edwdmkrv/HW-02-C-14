@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <limits>
 #include <random>
+#include <algorithm>
 #include <string>
 
 TEST(GroupiLibrary, TestFunctionSort) {
