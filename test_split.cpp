@@ -17,7 +17,7 @@ TEST(TestLibrary, TestFunctionSplit) {
 		std::random_device rnd;
 	
 		std::string str;
-		std::vector<std::string> ethalon{{}};
+		ip_t ethalon{{}};
 	
 		char const d{dist(rnd)};
 	
@@ -33,7 +33,7 @@ TEST(TestLibrary, TestFunctionSplit) {
 			}
 		}
 	
-		std::vector<std::string> const splitted{split(str, d)};
+		ip_t const splitted{split(str, d)};
 	
 		EXPECT_EQ(splitted, ethalon);
 	}
