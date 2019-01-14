@@ -41,51 +41,21 @@ set_target_properties (lib ipfilter test_split test_parse test_sort test_issue P
 	COMPILE_OPTIONS "-pedantic;-Wall;-Wextra"
 )
 
-target_include_directories (lib
-	PRIVATE "${CMAKE_BINARY_DIR}"
+set_target_properties (lib PROPERTIES
+	INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}"
 )
 
 set_target_properties (ipfilter test_split test_parse test_sort test_issue PROPERTIES
 	BUILD_RPATH "${CMAKE_BINARY_DIR}/${LIB_SUBDIR}/lib"
 )
 
-target_link_libraries (ipfilter
-	PRIVATE lib
-	PRIVATE "${GTEST_LIBRARY}"
-	PRIVATE "${GTEST_MAIN_LIBRARY}"
-	PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
-)
-
-target_link_libraries (test_split
-	PRIVATE lib
-	PRIVATE "${GTEST_LIBRARY}"
-	PRIVATE "${GTEST_MAIN_LIBRARY}"
-	PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
-)
-
-target_link_libraries (test_parse
-	PRIVATE lib
-	PRIVATE "${GTEST_LIBRARY}"
-	PRIVATE "${GTEST_MAIN_LIBRARY}"
-	PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
-)
-
-target_link_libraries (test_sort
-	PRIVATE lib
-	PRIVATE "${GTEST_LIBRARY}"
-	PRIVATE "${GTEST_MAIN_LIBRARY}"
-	PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
-)
-
-target_link_libraries (test_issue
-	PRIVATE lib
-	PRIVATE "${GTEST_LIBRARY}"
-	PRIVATE "${GTEST_MAIN_LIBRARY}"
-	PRIVATE "${CMAKE_THREAD_LIBS_INIT}"
-)
-
 set_target_properties (ipfilter PROPERTIES
+	LINK_LIBRARIES "lib;${CMAKE_THREAD_LIBS_INIT}"
 	INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_SUBDIR}/lib"
+)
+
+set_target_properties (test_split test_parse test_sort test_issue PROPERTIES
+	LINK_LIBRARIES "lib;${GTEST_LIBRARY};${GTEST_MAIN_LIBRARY};${CMAKE_THREAD_LIBS_INIT}"
 )
 
 install (TARGETS lib LIBRARY DESTINATION Debug/lib CONFIGURATIONS Debug COMPONENT lib)
