@@ -30,7 +30,7 @@ find_package (Threads REQUIRED)
 
 configure_file (version.hpp.in version.hpp)
 
-add_library (lib SHARED lib.cpp)
+add_subdirectory (lib)
 
 add_executable (ipfilter ipfilter.cpp)
 
@@ -46,11 +46,8 @@ set_target_properties (lib ipfilter test_split test_parse test_sort test_issue P
 	COMPILE_OPTIONS "-pedantic;-Wall;-Wextra"
 )
 
-set_target_properties (lib PROPERTIES
-	INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}"
-)
-
 set_target_properties (ipfilter test_split test_parse test_sort test_issue PROPERTIES
+	INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/lib"
 	BUILD_RPATH "${CMAKE_BINARY_DIR}/${LIB_SUBDIR}/lib"
 )
 
@@ -63,10 +60,7 @@ set_target_properties (test_split test_parse test_sort test_issue PROPERTIES
 	LINK_LIBRARIES "lib;${GTEST_LIBRARY};${GTEST_MAIN_LIBRARY};${CMAKE_THREAD_LIBS_INIT}"
 )
 
-install (TARGETS lib LIBRARY DESTINATION Debug/lib CONFIGURATIONS Debug COMPONENT lib)
 install (TARGETS ipfilter RUNTIME DESTINATION Debug/bin CONFIGURATIONS Debug COMPONENT prog)
-
-install (TARGETS lib LIBRARY DESTINATION lib CONFIGURATIONS Release COMPONENT lib)
 install (TARGETS ipfilter RUNTIME DESTINATION bin CONFIGURATIONS Release COMPONENT prog)
 
 set (CMAKE_VERBOSE_MAKEFILE OFF)
