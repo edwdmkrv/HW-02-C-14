@@ -8,6 +8,7 @@ project (ipfilter_lib
 	LANGUAGES CXX
 )
 
+# Library stuff
 add_library (lib SHARED lib.cpp)
 
 set_target_properties (lib PROPERTIES
