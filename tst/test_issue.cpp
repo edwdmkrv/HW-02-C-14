@@ -21,7 +21,7 @@ TEST(GroupiLibrary, TestFunctionIssue) {
 		std::string const third{std::to_string(dist(rnd))};
 		std::string const fourth{std::to_string(dist(rnd))};
 
-		auto const filter{[&](ip_t const &ip) {
+		auto const filter{[&](ip_str_t const &ip) {
 			return
 				ip.at(0) == first  ||
 				ip.at(1) == second ||
@@ -33,7 +33,7 @@ TEST(GroupiLibrary, TestFunctionIssue) {
 		ip_pool_t pool;
 
 		for(unsigned line{0}; line < lines; line++) {
-			ip_t ip{
+			ip_str_t ip{
 				std::to_string(dist(rnd)),
 				std::to_string(dist(rnd)),
 				std::to_string(dist(rnd)),

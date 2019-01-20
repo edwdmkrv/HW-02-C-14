@@ -30,7 +30,7 @@ TEST(GroupiLibrary, TestFunctionSort) {
 				uint32_t const ip{ips.at(line)};
 
 				pool.emplace_back(
-					ip_t{
+					ip_str_t{
 						std::to_string(ip / 256 / 256 / 256),
 						std::to_string(ip / 256 / 256 % 256),
 						std::to_string(ip / 256 % 256),

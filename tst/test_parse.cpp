@@ -18,7 +18,7 @@ TEST(GroupiLibrary, TestFunctionParse) {
 
 		std::string str;
 		std::string eth_str;
-		ip_t eth_ip;
+		ip_str_t eth_ip;
 		ip_pool_t ethalon;
 
 		unsigned line{0};

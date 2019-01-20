@@ -20,8 +20,8 @@ unsigned patch() {
 	return PROJECT_VERSION_PATCH;
 }
 
-ip_t split(std::string const &str, char const d) {
-	ip_t r;
+ip_str_t split(std::string const &str, char const d) {
+	ip_str_t r;
 
 	std::string::size_type start{};
 

@@ -15,17 +15,17 @@ int main() try {
 	for (
 		auto const &filter:
 		std::initializer_list<filter_t>{
-			[](ip_t const &) {
+			[](ip_str_t const &) {
 				return true;
 			},
-			[](ip_t const &ip) {
+			[](ip_str_t const &ip) {
 				return ip.at(0) == "1";
 			},
-			[](ip_t const &ip) {
+			[](ip_str_t const &ip) {
 				return ip.at(0) == "46" &&
 				       ip.at(1) == "70";
 			},
-			[](ip_t const &ip) {
+			[](ip_str_t const &ip) {
 				return ip.at(0) == "46" ||
 				       ip.at(1) == "46" ||
 				       ip.at(2) == "46" ||
