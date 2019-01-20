@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 3.6)
 # Project stuff
 project (ipfilter_pkg
 	VERSION 0.0.${TRAVIS_BUILD_NUMBER}
-	DESCRIPTION "Homework 2 IP filter implementation"
+	DESCRIPTION "Homework 2 IP filter implementation package"
 	HOMEPAGE_URL "https://github.com/edwdmkrv/HW-02-C-14/tree/master/pkg"
 	LANGUAGES CXX
 )
