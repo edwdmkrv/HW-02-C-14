@@ -42,7 +42,6 @@ set_target_properties (ipfilter PROPERTIES
 )
 
 set_target_properties (ipfilter PROPERTIES
-	INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/lib"
 	BUILD_RPATH "${CMAKE_BINARY_DIR}/${LIB_SUBDIR}/lib"
 )
 
