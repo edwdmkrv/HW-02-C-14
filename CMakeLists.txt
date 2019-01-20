@@ -34,19 +34,14 @@ add_subdirectory (lib)
 
 add_executable (ipfilter ipfilter.cpp)
 
-add_executable (test_split test_split.cpp)
-add_executable (test_parse test_parse.cpp)
-add_executable (test_sort test_sort.cpp)
-add_executable (test_issue test_issue.cpp)
-
-set_target_properties (lib ipfilter test_split test_parse test_sort test_issue PROPERTIES
+set_target_properties (ipfilter PROPERTIES
 	CXX_STANDARD 14
 	CXX_EXTENSIONS OFF
 	CXX_STANDARD_REQUIRED ON
 	COMPILE_OPTIONS "-pedantic;-Wall;-Wextra"
 )
 
-set_target_properties (ipfilter test_split test_parse test_sort test_issue PROPERTIES
+set_target_properties (ipfilter PROPERTIES
 	INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/lib"
 	BUILD_RPATH "${CMAKE_BINARY_DIR}/${LIB_SUBDIR}/lib"
 )
@@ -56,36 +51,13 @@ set_target_properties (ipfilter PROPERTIES
 	INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_SUBDIR}/lib"
 )
 
-set_target_properties (test_split test_parse test_sort test_issue PROPERTIES
-	LINK_LIBRARIES "lib;${GTEST_LIBRARY};${GTEST_MAIN_LIBRARY};${CMAKE_THREAD_LIBS_INIT}"
-)
-
 install (TARGETS ipfilter RUNTIME DESTINATION Debug/bin CONFIGURATIONS Debug COMPONENT prog)
 install (TARGETS ipfilter RUNTIME DESTINATION bin CONFIGURATIONS Release COMPONENT prog)
 
 set (CMAKE_VERBOSE_MAKEFILE OFF)
 
 # CTest stuff
-add_test (NAME Test-function-split
-	COMMAND test_split
-	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-)
-
-add_test (NAME Test-function-parse
-	COMMAND test_parse
-	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-)
-
-add_test (NAME Test-function-sort
-	COMMAND test_sort
-	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-)
-
-add_test (NAME Test-function-issue
-	COMMAND test_issue
-	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-)
-
+add_subdirectory (tst)
 include (CTest)
 
 # CPack stuff
