@@ -30,31 +30,13 @@ find_package (Threads REQUIRED)
 
 configure_file (version.hpp.in version.hpp)
 
+set (CMAKE_VERBOSE_MAKEFILE OFF)
+
 # Library stuff
 add_subdirectory (lib)
 
-add_executable (ipfilter ipfilter.cpp)
-
-set_target_properties (ipfilter PROPERTIES
-	CXX_STANDARD 14
-	CXX_EXTENSIONS OFF
-	CXX_STANDARD_REQUIRED ON
-	COMPILE_OPTIONS "-pedantic;-Wall;-Wextra"
-)
-
-set_target_properties (ipfilter PROPERTIES
-	BUILD_RPATH "${CMAKE_BINARY_DIR}/${LIB_SUBDIR}/lib"
-)
-
-set_target_properties (ipfilter PROPERTIES
-	LINK_LIBRARIES "lib;${CMAKE_THREAD_LIBS_INIT}"
-	INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_SUBDIR}/lib"
-)
-
-install (TARGETS ipfilter RUNTIME DESTINATION Debug/bin CONFIGURATIONS Debug COMPONENT prog)
-install (TARGETS ipfilter RUNTIME DESTINATION bin CONFIGURATIONS Release COMPONENT prog)
-
-set (CMAKE_VERBOSE_MAKEFILE OFF)
+# Program stuff
+add_subdirectory (src)
 
 # CTest stuff
 add_subdirectory (tst)
