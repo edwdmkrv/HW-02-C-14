@@ -30,6 +30,7 @@ find_package (Threads REQUIRED)
 
 configure_file (version.hpp.in version.hpp)
 
+# Library stuff
 add_subdirectory (lib)
 
 add_executable (ipfilter ipfilter.cpp)
