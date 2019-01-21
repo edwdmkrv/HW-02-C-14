@@ -41,28 +41,22 @@ ip_str_t split(std::string const &str, char const d) {
 
 using namespace std::literals::string_literals;
 
-ip_t::ip_t(ip_str_t const &ip_str): octets{} {
-	if (ip_str.size() != octets_num) {
-		throw std::runtime_error{__PRETTY_FUNCTION__ + ": IP address must have exactly "s + std::to_string(octets_num) + " octets"s};
+std::uint8_t ip_t::convert(std::string const &ip_str) {
+	auto const octet{std::stoul(ip_str)};
+
+	if (octet > std::numeric_limits<uint8_t>::max()) {
+		throw std::runtime_error{__PRETTY_FUNCTION__ + ": IP address octet maximal value is "s + std::to_string(std::numeric_limits<uint8_t>::max())};
 	}
 
-	for (auto const &item: ip_str) {
-		auto const octet{std::stoul(item)};
-
-		if (octet > octet_max_value) {
-			throw std::out_of_range{__PRETTY_FUNCTION__ + "IP address octet value cannot exceed "s + std::to_string(octet_max_value)};
-		}
-
-		octets = (octets << octet_digits) | octet;
-	}
+	return octet;
 }
 
-unsigned ip_t::const_iterator::operator *() const {
-	if (n >= ip_t::octet_digits) {
-		throw std::out_of_range{__PRETTY_FUNCTION__ + "Invalid iterator value"s};
+std::array<std::uint8_t, ip_addr_octets> ip_t::convert(ip_str_t const &ip_str) {
+	if (ip_str.size() != ip_addr_octets) {
+		throw std::runtime_error{__PRETTY_FUNCTION__ + ": IP address must have exactly "s + std::to_string(ip_addr_octets) + " octets"s};
 	}
 
-	return (ip.octets >> (ip_t::octets_num - n - 1) * ip_t::octet_digits) & octet_max_value;
+	return {convert(ip_str.at(0)), convert(ip_str.at(1)), convert(ip_str.at(2)), convert(ip_str.at(3))};
 }
 
 ip_pool_t parse(std::istream &i) {
