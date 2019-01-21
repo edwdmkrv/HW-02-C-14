@@ -27,8 +27,6 @@ int main() try {
 				       ip.at(1) == 70;
 			},
 			[](ip_t const &ip) {
-				auto it{std::cbegin(ip)};
-
 				return ip.at(0) == 46 ||
 				       ip.at(1) == 46 ||
 				       ip.at(2) == 46 ||

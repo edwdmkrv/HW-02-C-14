@@ -22,8 +22,6 @@ TEST(GroupiLibrary, TestFunctionIssue) {
 		auto const fourth{dist(rnd)};
 
 		auto const filter{[&](ip_t const &ip) {
-			auto it{std::cbegin(ip)};
-
 			return
 				ip.at(0) == first  ||
 				ip.at(1) == second ||
