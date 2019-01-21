@@ -16,31 +16,36 @@ TEST(GroupiLibrary, TestFunctionIssue) {
 		std::uniform_int_distribution<uint8_t> dist{std::numeric_limits<uint8_t>::min(), std::numeric_limits<uint8_t>::max()};
 		std::random_device rnd;
 
-		std::string const first{std::to_string(dist(rnd))};
-		std::string const second{std::to_string(dist(rnd))};
-		std::string const third{std::to_string(dist(rnd))};
-		std::string const fourth{std::to_string(dist(rnd))};
+		auto const first{dist(rnd)};
+		auto const second{dist(rnd)};
+		auto const third{dist(rnd)};
+		auto const fourth{dist(rnd)};
 
-		auto const filter{[&](ip_str_t const &ip) {
+		auto const filter{[&](ip_t const &ip) {
+			auto it{std::cbegin(ip)};
+
 			return
-				ip.at(0) == first  ||
-				ip.at(1) == second ||
-				ip.at(2) == third  ||
-				ip.at(3) == fourth;
+				       *it  == first  ||
+				(++it, *it) == second ||
+				(++it, *it) == third  ||
+				(++it, *it) == fourth;
 		}};
 
 		ip_pool_t to_be_issued;
 		ip_pool_t pool;
 
 		for(unsigned line{0}; line < lines; line++) {
-			ip_str_t ip{
+			ip_t ip{ip_str_t{
 				std::to_string(dist(rnd)),
 				std::to_string(dist(rnd)),
 				std::to_string(dist(rnd)),
 				std::to_string(dist(rnd))
+			}
 			};
 
-			if (ip.at(0) == first || ip.at(1) == second || ip.at(2) == third || ip.at(3) == fourth) {
+			auto it{std::cbegin(ip)};
+
+			if (*it == first || (++it, *it) == second || (++it, *it) == third || (++it, *it) == fourth) {
 				to_be_issued.push_back(ip);
 			}
 

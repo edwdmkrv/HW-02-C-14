@@ -62,17 +62,20 @@ public:
 		return {*this, octets_num};
 	}
 
-	bool operator <(ip_t const & ip) const noexcept {
-		return octets < ip.octets;
+	bool operator ==(ip_t const & ip) const noexcept {
+		return octets == ip.octets;
+	}
+
+	bool operator >(ip_t const & ip) const noexcept {
+		return octets > ip.octets;
 	}
 };
 
-using ip_pool_t = std::vector<ip_str_t>;
-using filter_t = std::function<bool(ip_str_t const &)>;
+using ip_pool_t = std::vector<ip_t>;
+using filter_t = std::function<bool(ip_t const &)>;
 
 ip_str_t split(std::string const &str, char const d);
 ip_pool_t parse(std::istream &i);
-void sort(ip_pool_t &ip_pool);
 void issue(std::ostream &o, ip_pool_t const &ip_pool, filter_t const &filter);
 
 #endif

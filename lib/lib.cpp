@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <algorithm>
+#include <iostream>
 
 #include <version.hpp>
 
@@ -40,12 +41,10 @@ ip_str_t split(std::string const &str, char const d) {
 
 using namespace std::literals::string_literals;
 
-ip_t::ip_t(ip_str_t const &ip_str) {
+ip_t::ip_t(ip_str_t const &ip_str): octets{} {
 	if (ip_str.size() != octets_num) {
 		throw std::runtime_error{__PRETTY_FUNCTION__ + ": IP address must have exactly "s + std::to_string(octets_num) + " octets"s};
 	}
-
-	unsigned octet_num{ip_t::octets_num};
 
 	for (auto const &item: ip_str) {
 		auto const octet{std::stoul(item)};
@@ -54,7 +53,7 @@ ip_t::ip_t(ip_str_t const &ip_str) {
 			throw std::out_of_range{__PRETTY_FUNCTION__ + "IP address octet value cannot exceed "s + std::to_string(octet_max_value)};
 		}
 
-		octets |= octet << --octet_num * octet_digits;
+		octets = (octets << octet_digits) | octet;
 	}
 }
 
@@ -63,7 +62,7 @@ unsigned ip_t::const_iterator::operator *() const {
 		throw std::out_of_range{__PRETTY_FUNCTION__ + "Invalid iterator value"s};
 	}
 
-	return (ip.octets >> n * ip_t::octet_digits) & octet_max_value;
+	return (ip.octets >> (ip_t::octets_num - n - 1) * ip_t::octet_digits) & octet_max_value;
 }
 
 ip_pool_t parse(std::istream &i) {
@@ -74,29 +73,6 @@ ip_pool_t parse(std::istream &i) {
 	}
 
 	return ip_pool;
-}
-
-void sort(ip_pool_t &ip_pool) {
-	std::sort(std::begin(ip_pool), std::end(ip_pool),
-		  [](auto const &l, auto const &r) {
-		  	for (auto l_it{std::cbegin(l)}, l_end{std::cend(l)}, r_it{std::cbegin(r)}, r_end{std::cend(r)};
-			     l_it != l_end && r_it != r_end;
-			     ++l_it, ++r_it) {
-
-				auto const &lv{std::stoi(*l_it)}, &rv{std::stoi(*r_it)};
-
-				if (lv > rv) {
-					return true;
-				}
-
-				if (lv < rv) {
-					return false;
-				}
-			}
-
-		  	return false;
-		  }
-	);
 }
 
 std::ostream &operator <<(std::ostream &o, ip_t const &ip) {
@@ -113,14 +89,7 @@ std::ostream &operator <<(std::ostream &o, ip_t const &ip) {
 void issue(std::ostream &o, ip_pool_t const &ip_pool, filter_t const &filter) {
 	for (auto const &ip: ip_pool) {
 		if (filter(ip)) {
-			bool dot{};
-
-			for (auto const &ip_part: ip) {
-				o << (dot ? "." : "") << ip_part;
-				dot = true;
-			}
-
-			o << std::endl;
+			o << ip << std::endl;
 		}
 	}
 }
