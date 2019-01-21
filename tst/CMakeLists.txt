@@ -10,11 +10,12 @@ project (ipfilter_tst
 
 # Test stuff
 add_executable (test_split test_split.cpp)
-add_executable (test_parse test_parse.cpp)
-add_executable (test_sort test_sort.cpp)
+# add_executable (test_parse test_parse.cpp)
+# add_executable (test_sort test_sort.cpp)
 add_executable (test_issue test_issue.cpp)
 
-set_target_properties (test_split test_parse test_sort test_issue PROPERTIES
+# set_target_properties (test_split test_parse test_sort test_issue PROPERTIES
+set_target_properties (test_split test_issue PROPERTIES
 	CXX_STANDARD 14
 	CXX_EXTENSIONS OFF
 	CXX_STANDARD_REQUIRED ON
@@ -28,6 +29,7 @@ add_test (NAME Test-function-split
 	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 )
 
+#[[
 add_test (NAME Test-function-parse
 	COMMAND test_parse
 	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
@@ -37,6 +39,7 @@ add_test (NAME Test-function-sort
 	COMMAND test_sort
 	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 )
+]]
 
 add_test (NAME Test-function-issue
 	COMMAND test_issue
