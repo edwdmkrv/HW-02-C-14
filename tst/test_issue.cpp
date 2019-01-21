@@ -25,10 +25,10 @@ TEST(GroupiLibrary, TestFunctionIssue) {
 			auto it{std::cbegin(ip)};
 
 			return
-				       *it  == first  ||
-				(++it, *it) == second ||
-				(++it, *it) == third  ||
-				(++it, *it) == fourth;
+				ip.at(0) == first  ||
+				ip.at(1) == second ||
+				ip.at(2) == third  ||
+				ip.at(3) == fourth;
 		}};
 
 		ip_pool_t to_be_issued;
@@ -43,9 +43,7 @@ TEST(GroupiLibrary, TestFunctionIssue) {
 			}
 			};
 
-			auto it{std::cbegin(ip)};
-
-			if (*it == first || (++it, *it) == second || (++it, *it) == third || (++it, *it) == fourth) {
+			if (ip.at(0) == first || ip.at(1) == second || ip.at(2) == third || ip.at(3) == fourth) {
 				to_be_issued.push_back(ip);
 			}
 
@@ -59,7 +57,7 @@ TEST(GroupiLibrary, TestFunctionIssue) {
 			bool dot{};
 
 			for (auto const &ip_part: ip) {
-				should_be_issued << (dot ? "." : "") << ip_part;
+				should_be_issued << (dot ? "." : "") << static_cast<unsigned>(ip_part);
 				dot = true;
 			}
 

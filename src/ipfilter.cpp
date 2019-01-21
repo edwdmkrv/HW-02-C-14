@@ -20,21 +20,19 @@ int main() try {
 				return true;
 			},
 			[](ip_t const &ip) {
-				return *std::cbegin(ip) == 1;
+				return ip.at(0) == 1;
+			},
+			[](ip_t const &ip) {
+				return ip.at(0) == 46 &&
+				       ip.at(1) == 70;
 			},
 			[](ip_t const &ip) {
 				auto it{std::cbegin(ip)};
 
-				return        *it  == 46 &&
-				       (++it, *it) == 70;
-			},
-			[](ip_t const &ip) {
-				auto it{std::cbegin(ip)};
-
-				return        *it  == 46 ||
-				       (++it, *it) == 46 ||
-				       (++it, *it) == 46 ||
-				       (++it, *it) == 46;
+				return ip.at(0) == 46 ||
+				       ip.at(1) == 46 ||
+				       ip.at(2) == 46 ||
+				       ip.at(3) == 46;
 			}
 		}
 	) {

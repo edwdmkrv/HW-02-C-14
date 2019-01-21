@@ -73,7 +73,7 @@ std::ostream &operator <<(std::ostream &o, ip_t const &ip) {
 	bool dot{};
 
 	for (auto const &octet: ip) {
-		o << (dot ? "." : "") << octet;
+		o << (dot ? "." : "") << static_cast<unsigned>(octet);
 		dot = true;
 	}
 
