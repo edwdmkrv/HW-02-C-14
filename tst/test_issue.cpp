@@ -7,66 +7,70 @@
 #include <random>
 #include <string>
 
-TEST(GroupiLibrary, TestFunctionIssue) {
-	enum: unsigned {attempts = 10};
+struct Data {
+	filter_t const filter;
+	std::string const filt_str;
+	ip_pool_t const ip_pool;
+	std::string const expected;
 
-	for (unsigned attempt{0}; attempt < attempts; attempt++) {
-		enum: unsigned {lines = 128 * 1024};
+};
 
-		std::uniform_int_distribution<uint8_t> dist{std::numeric_limits<uint8_t>::min(), std::numeric_limits<uint8_t>::max()};
-		std::random_device rnd;
+std::ostream &operator <<(std::ostream &o, ip_pool_t const &ip_pool) {
+	bool first{true};
 
-		auto const first{dist(rnd)};
-		auto const second{dist(rnd)};
-		auto const third{dist(rnd)};
-		auto const fourth{dist(rnd)};
+	o << '{';
 
-		auto const filter{[&](ip_t const &ip) {
-			return
-				ip.at(0) == first  ||
-				ip.at(1) == second ||
-				ip.at(2) == third  ||
-				ip.at(3) == fourth;
-		}};
-
-		ip_pool_t to_be_issued;
-		ip_pool_t pool;
-
-		for(unsigned line{0}; line < lines; line++) {
-			ip_t ip{ip_str_t{
-				std::to_string(dist(rnd)),
-				std::to_string(dist(rnd)),
-				std::to_string(dist(rnd)),
-				std::to_string(dist(rnd))
-			}
-			};
-
-			if (ip.at(0) == first || ip.at(1) == second || ip.at(2) == third || ip.at(3) == fourth) {
-				to_be_issued.push_back(ip);
-			}
-
-			pool.push_back(ip);
-		}
-
-		std::ostringstream should_be_issued;
-		std::ostringstream issued;
-
-		for (auto const &ip: to_be_issued) {
-			bool dot{};
-
-			for (auto const &ip_part: ip) {
-				should_be_issued << (dot ? "." : "") << static_cast<unsigned>(ip_part);
-				dot = true;
-			}
-
-			should_be_issued << std::endl;
-		}
-
-		issue(issued, pool, filter);
-
-		EXPECT_EQ(issued.str(), should_be_issued.str());
+	for (auto const &ip: ip_pool) {
+		o << (first ? "" : ", ") << ip;
+		first = false;
 	}
+
+	return o << '}';
 }
+
+std::ostream &operator <<(std::ostream &o, Data const &data) {
+	return o
+		<< "filter: '" << data.filt_str << "', "
+		<< "ip pool: \"" << data.ip_pool << "\", "
+		<< "expected: " << data.expected;
+}
+
+struct TestLibrary: testing::Test, testing::WithParamInterface<Data> {
+};
+
+TEST_P(TestLibrary, TestFunctionSplit) {
+	Data const data{GetParam()};
+	std::ostringstream o;
+
+	issue(o, data.ip_pool, data.filter);
+
+	EXPECT_EQ(o.str(), data.expected);
+}
+
+INSTANTIATE_TEST_CASE_P(SimpleDataset, TestLibrary,
+	testing::Values(
+		Data{
+			[](ip_t const &) {return true;},
+			"true",
+			{ip_str_t{"1", "2", "3", "4"}, ip_str_t{"5", "6", "7", "8"}, ip_str_t{"9", "10", "11", "12"}},
+			"1.2.3.4\n5.6.7.8\n9.10.11.12\n"},
+		Data{
+			[](ip_t const &ip) {return ip.at(0) == 1;},
+			"ip.at(0) == 1",
+			{ip_str_t{"1", "2", "3", "4"}, ip_str_t{"5", "6", "7", "8"}, ip_str_t{"9", "10", "11", "12"}},
+			"1.2.3.4\n"},
+		Data{
+			[](ip_t const &ip) {return ip.at(0) == 46 && ip.at(1) == 70;},
+			"ip.at(0) == 46 && ip.at(1) == 70",
+			{ip_str_t{"1", "70", "3", "4"}, ip_str_t{"46", "70", "7", "8"}, ip_str_t{"46", "10", "11", "12"}},
+			"46.70.7.8\n"},
+		Data{
+			[](ip_t const &ip) {return ip.at(0) == 46 || ip.at(1) == 46 || ip.at(2) == 46 || ip.at(3) == 46;},
+			"ip.at(0) == 46 || ip.at(1) == 46 || ip.at(2) == 46 || ip.at(3) == 46",
+			{ip_str_t{"1", "70", "3", "4"}, ip_str_t{"46", "70", "7", "8"}, ip_str_t{"46", "10", "11", "12"}},
+			"46.70.7.8\n46.10.11.12\n"}
+	)
+);
 
 int main(int argc, char *argv[]) {
 	testing::InitGoogleTest(&argc, argv);
