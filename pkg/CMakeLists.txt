@@ -13,11 +13,11 @@ set (CPACK_GENERATOR DEB)
 
 set (CPACK_COMPONENT_PROG_DESCRIPTION
 "program
-The sample IP filter program depending on the corresponding library.")
+ The sample IP filter program depending on the corresponding library.")
 
 set (CPACK_COMPONENT_LIB_DESCRIPTION
 "library
-The IP filter library the corresponding program depends on.")
+ The IP filter library the corresponding program depends on.")
 
 set (CPACK_DEB_COMPONENT_INSTALL ON)
 set (CPACK_DEBIAN_ENABLE_COMPONENT_DEPENDS ON)
