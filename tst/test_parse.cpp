@@ -7,62 +7,55 @@
 #include <random>
 #include <string>
 
-TEST(GroupiLibrary, TestFunctionParse) {
-	enum: unsigned {attempts = 10};
+struct Data {
+	std::string const stream;
+	ip_pool_t const expected;
 
-	for (unsigned attempt{0}; attempt < attempts; attempt++) {
-		enum: unsigned {lines = 4 * 1024};
+};
 
-		std::uniform_int_distribution<char> dist{std::numeric_limits<char>::min(), std::numeric_limits<char>::max()};
-		std::random_device rnd;
+std::ostream &operator <<(std::ostream &o, ip_pool_t const &ip_pool) {
+	bool first{true};
 
-		std::string str;
-		std::string eth_str;
-		ip_str_t eth_ip;
-		ip_pool_t ethalon;
+	o << '{';
 
-		unsigned line{0};
-		bool eth_filled{false};
-
-		while (line < lines) {
-			char const d{dist(rnd)};
-
-			bool const tab = d == '\t';
-			bool const eol = d == '\n';
-			bool const dot = d == '.';
-
-			str += d;
-
-			if (!eth_filled) {
-				if (!tab && !eol) {
-					if (!dot) {
-						eth_str += d;
-					} else {
-						eth_ip.emplace_back();
-						std::swap(eth_str, eth_ip.back());
-					}
-				} else {
-					eth_ip.emplace_back();
-					std::swap(eth_str, eth_ip.back());
-
-					ethalon.emplace_back();
-					std::swap(eth_ip, ethalon.back());
-					goto fix_eth_filled;
-				}
-			} else {
-fix_eth_filled:
-				eth_filled = !eol;
-			}
-
-			line += eol;
-		}
-
-		std::istringstream stream{str};
-		ip_pool_t const parsed{parse(stream)};
-
-		EXPECT_EQ(parsed, ethalon);
+	for (auto const &ip: ip_pool) {
+		o << (first ? "" : ", ") << ip;
+		first = false;
 	}
+
+	return o << '}';
 }
+
+std::ostream &operator <<(std::ostream &o, Data const &data) {
+	return o
+		<< "stream: \"" << data.stream << "\", "
+		<< "expected: " << data.expected;
+}
+
+struct TestLibrary: testing::Test, testing::WithParamInterface<Data> {
+};
+
+TEST_P(TestLibrary, TestFunctionSplit) {
+	Data const data{GetParam()};
+	std::istringstream i{data.stream};
+
+	auto const ip_pool{parse(i)};
+
+	EXPECT_EQ(ip_pool, data.expected);
+}
+
+INSTANTIATE_TEST_CASE_P(SimpleDataset, TestLibrary,
+	testing::Values(
+		Data{
+			"1.2.3.4\taaa\tbbb\n5.6.7.8\t\n9.10.11.12",
+			{ip_str_t{"1", "2", "3", "4"}, ip_str_t{"5", "6", "7", "8"}, ip_str_t{"9", "10", "11", "12"}},
+		},
+		Data{
+			"1.2.3.4\n5.6.7.8\n9.10.11.12",
+			{ip_str_t{"1", "2", "3", "4"}, ip_str_t{"5", "6", "7", "8"}, ip_str_t{"9", "10", "11", "12"}},
+		}
+	)
+);
 
 int main(int argc, char *argv[]) {
 	testing::InitGoogleTest(&argc, argv);
