@@ -34,7 +34,7 @@ int main() try {
 			}
 		}
 	) {
-		issue(std::cout, ip_pool, filter);
+		std::cout << ip_pool_filtered_proxy_t{ip_pool, filter};
 	}
 
 	return EXIT_SUCCESS;

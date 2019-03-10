@@ -42,7 +42,7 @@ TEST_P(TestLibrary, TestFunctionSplit) {
 	Data const data{GetParam()};
 	std::ostringstream o;
 
-	issue(o, data.ip_pool, data.filter);
+	o << ip_pool_filtered_proxy_t{data.ip_pool, data.filter};
 
 	EXPECT_EQ(o.str(), data.expected);
 }
