@@ -27,7 +27,7 @@ ip_str_t split(std::string const &str, char const d) {
 
 	std::string::size_type start{};
 
-	for (std::string::size_type stop{str.find_first_of(d)};
+	for (auto stop{str.find_first_of(d)};
 	     stop != std::string::npos;
 	     stop = str.find_first_of(d, start = stop + 1)) {
 
