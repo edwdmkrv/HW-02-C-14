@@ -80,6 +80,16 @@ std::ostream &operator <<(std::ostream &o, ip_t const &ip) {
 	return o;
 }
 
+std::ostream &operator <<(std::ostream &o, ip_pool_filtered_proxy_t const &proxy) {
+	for (auto const &ip: proxy.ip_pool) {
+		if (proxy.filter(ip)) {
+			o << ip << std::endl;
+		}
+	}
+
+	return o;
+}
+
 void issue(std::ostream &o, ip_pool_t const &ip_pool, filter_t const &filter) {
 	for (auto const &ip: ip_pool) {
 		if (filter(ip)) {
