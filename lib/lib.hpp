@@ -47,7 +47,6 @@ public:
 
 ip_str_t split(std::string const &str, char const d);
 ip_pool_t parse(std::istream &i);
-void issue(std::ostream &o, ip_pool_t const &ip_pool, filter_t const &filter);
 
 std::ostream &operator <<(std::ostream &o, ip_t const &ip);
 

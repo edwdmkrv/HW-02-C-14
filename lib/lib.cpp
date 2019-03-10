@@ -89,11 +89,3 @@ std::ostream &operator <<(std::ostream &o, ip_pool_filtered_proxy_t const &proxy
 
 	return o;
 }
-
-void issue(std::ostream &o, ip_pool_t const &ip_pool, filter_t const &filter) {
-	for (auto const &ip: ip_pool) {
-		if (filter(ip)) {
-			o << ip << std::endl;
-		}
-	}
-}
