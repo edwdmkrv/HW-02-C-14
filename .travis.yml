@@ -1,8 +1,15 @@
 language: cpp
 dist: xenial
+addons:
+  apt:
+    update: true
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libgtest-dev
+      - build-essential
+      - cmake
 before_script:
-- sudo apt-add-repository -y "deb http://archive.ubuntu.com/ubuntu xenial main universe"
-- sudo apt-get install -y libgtest-dev build-essential cmake
 - pushd /usr/src/gtest
 - sudo cmake .
 - sudo cmake --build . -- -j "`nproc`"
