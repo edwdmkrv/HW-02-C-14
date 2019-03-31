@@ -8,7 +8,6 @@ addons:
     packages:
       - libgtest-dev
       - build-essential
-      - cmake
 before_script:
 - pushd /usr/src/gtest
 - sudo cmake .
